@@ -43,7 +43,7 @@ def run(problem, params):
     for i in range (npop):
         pop[i].position = np.random.uniform(varmin,varmax,nvar)
         pop[i].cost=costfunc(pop[i].position)
-        if pop[i].cost<bestsol.cost:
+        if pop[i].cost < bestsol.cost:
             bestsol = pop[i].deepcopy()
             
     # Best Cost of iterations

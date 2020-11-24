@@ -12,6 +12,8 @@ import ga
 
 #squere test function
 def sphere(x):
+    # return sum((np.e**(-2*np.log(2)*(((x-0.08)/0.854)**2)))*(np.sin(5*np.pi*((x**.75)-.05))**6)) This one breaks it idk why
+    # return sum(np.power(np.sin(5*np.pi*x),6))
     return sum(x**2)  #cost function
 
 # Problem Definition
