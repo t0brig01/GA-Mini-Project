@@ -219,14 +219,14 @@ def runCrowding(problem, params):
 
             if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
                 if c1.cost > p1.cost:
-                    pop[q[0]] = c1
+                    pop[q[0]] = c1.deepcopy()
                 if c2.cost > p2.cost:
-                    pop[q[1]] = c2
+                    pop[q[1]] = c2.deepcopy()
             else:
                 if c2.cost > p1.cost:
-                    pop[q[0]] = c2
+                    pop[q[0]] = c2.deepcopy()
                 if c1.cost > p2.cost:
-                    pop[q[1]] = c1
+                    pop[q[1]] = c1.deepcopy()
 
             pop = sorted(pop, key=lambda x: x.cost)
             #Evaluate First Offspring
