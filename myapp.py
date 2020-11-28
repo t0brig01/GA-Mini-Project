@@ -10,6 +10,7 @@ import math
 import matplotlib.pyplot as plt
 from ypstruct import structure
 import ga
+import csv
 
 #squere test function
 def sphere(x):
@@ -40,11 +41,22 @@ params.gamma = 0.1
 params.mu = 0.1
 params.sigma = 0.1
 
-#Run GA
-out = ga.run(problem, params)
-print("Max: " + str(np.max(out.bestcost)))
-print("Min: "+ str(np.min(out.bestcost)))
-print("Average: "+ str(sum(out.bestcost)/len(out.bestcost)))
+x=0
+max = []
+min = []
+avg = []
+
+while x < 10:
+    #Run GA
+    out = ga.run(problem, params)
+    max.append(np.max(out.bestcost))
+    min.append(np.min(out.bestcost))
+    avg.append(sum(out.bestcost)/len(out.bestcost))
+    x += 1
+
+print("Max: " + str(np.max(max)))
+print("Min: "+ str(np.min(avg)))
+print("Average: "+ str(sum(avg)/10))
 #Results
 #plt.plot(out.bestcost)
 plt.semilogy(out.bestcost)
@@ -54,3 +66,4 @@ plt.ylabel("Best Cost")
 plt.title("Genetic Algorithm (GA)")
 plt.grid(True)
 plt.show()
+    
