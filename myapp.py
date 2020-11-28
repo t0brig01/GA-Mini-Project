@@ -46,11 +46,11 @@ max = []
 min = []
 avg = []
 
-while x < 10:
+while x < 1:
     #Run GA
     out = ga.run(problem, params)
     max.append(np.max(out.bestcost))
-    min.append(np.min(out.bestcost))
+    min.append(np.min(out.worstcost))
     avg.append(sum(out.bestcost)/len(out.bestcost))
     x += 1
 
@@ -59,11 +59,13 @@ print("Min: "+ str(np.min(avg)))
 print("Average: "+ str(sum(avg)/10))
 #Results
 #plt.plot(out.bestcost)
-plt.semilogy(out.bestcost)
+plt.semilogy(out.bestcost, label = "best")
+plt.plot(out.worstcost, label = "worst")
 plt.xlim(0,params.maxit)
 plt.xlabel("Iteration")
 plt.ylabel("Best Cost")
 plt.title("Genetic Algorithm (GA)")
 plt.grid(True)
+plt.legend()
 plt.show()
     
