@@ -12,6 +12,11 @@ from ypstruct import structure
 import ga
 import csv
 
+#parameters
+pM = 0.1
+pC = 0.1
+trial_count = 10
+
 #squere test function
 def sphere(x):
     return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6))    
@@ -36,9 +41,9 @@ params.npop = 50
 params.beta = 1
 ##population coefficient (if it is 1 then number of children equals to nember of parents) 
 params.pc = 1
-params.gamma = 0.1
+params.gamma = pC
 ## mutation parameters
-params.mu = 0.1
+params.mu = pM
 params.sigma = 0.1
 
 x=0
@@ -46,7 +51,7 @@ max = []
 min = []
 avg = []
 
-while x < 10:
+while x < trial_count:
     #Run GA
     out = ga.runCrowding(problem, params)
     max.append(np.max(out.bestcost))
