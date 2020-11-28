@@ -215,29 +215,26 @@ def runCrowding(problem, params):
             #Crowding stuff
             if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
                 if c1.cost > p1.cost:
-                    p1 = c1
+                    pop[q[0]] = c1.deepcopy()
                 if c2.cost > p2.cost:
-                    p2 = c2
+                    pop[q[1]] = c2.deepcopy()
             else:
                 if c2.cost > p1.cost:
-                    p1 = c2
+                    pop[q[0]] = c2.deepcopy()
                 if c1.cost > p2.cost:
-                    p2 = c1
+                    pop[q[1]] = c1.deepcopy()
 
             #Evaluate First Offspring
-            if p1.cost < bestsol.cost:
-                bestsol = p1.deepcopy()
-            if p1.cost > worstsol.cost:
-                worstsol = p1.deepcopy()
+            if pop[q[0]].cost < bestsol.cost:
+                bestsol = pop[q[0]].deepcopy()
+            if pop[q[0]].cost > worstsol.cost:
+                worstsol = pop[q[0]].deepcopy()
             
             #Evaluate Second Offspring
-            if p2.cost < bestsol.cost:
-                bestsol = p2.deepcopy()
-            if p2.cost > worstsol.cost:
-                worstsol = p2.deepcopy()
-
-            pop[q[0]] = p1.deepcopy()
-            pop[q[1]] = p2.deepcopy()
+            if pop[q[1]].cost < bestsol.cost:
+                bestsol = pop[q[1]].deepcopy()
+            if pop[q[1]].cost > worstsol.cost:
+                worstsol = pop[q[1]].deepcopy()
             
         # Merge Sort and Select
         pop = sorted(pop, key=lambda x: x.cost)
