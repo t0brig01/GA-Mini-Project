@@ -46,12 +46,13 @@ max = []
 min = []
 avg = []
 
-while x < 1:
+while x < 10:
     #Run GA
-    out = ga.run(problem, params)
+    out = ga.runCrowding(problem, params)
     max.append(np.max(out.bestcost))
     min.append(np.min(out.worstcost))
     avg.append(sum(out.bestcost)/len(out.bestcost))
+    print("Run " + str(x+1) + " done")
     x += 1
 
 print("Max: " + str(np.max(max)))

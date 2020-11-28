@@ -8,7 +8,7 @@ Created on Sat Nov 21 15:09:33 2020
 import numpy as np
 from ypstruct import structure
 
-def run(problem, params):
+def runClassic(problem, params):
     
     # Problem Informtaion
     costfunc = problem.costfunc
@@ -120,7 +120,7 @@ def run(problem, params):
         worstcost[it] = worstsol.cost
         
         #Show Iteration Information
-        print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
+        # print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
         
     
             
@@ -132,7 +132,127 @@ def run(problem, params):
     out.worstsol = worstsol
     out.worstcost = worstcost
     return out
+
+def runCrowding(problem, params):
+    
+    # Problem Informtaion
+    costfunc = problem.costfunc
+    nvar = problem.nvar
+    varmin = problem.varmin
+    varmax = problem.varmax
+    
+    # Parameters
+    maxit = params.maxit
+    npop = params.npop
+    beta = params.beta
+    pc =params.pc
+    ## nc = number of children
+    nc = int(np.round(pc*npop/2)*2) 
+    gamma = params.gamma
+    mu = params.mu
+    sigma = params.sigma
+    
+    
+    # Empty Individual Template
+    empty_individual = structure()
+    empty_individual.position= None
+    empty_individual.cost = None
+    
+    # BestSolution Ever found
+    bestsol = empty_individual.deepcopy()
+    bestsol.cost = np.inf
+
+    # WorstSolution Ever found
+    worstsol = empty_individual.deepcopy()
+    worstsol.cost = 0
+    
+    
+    # Initialiaze Population
+    pop = empty_individual.repeat(npop)
+    for i in range (npop):
+        pop[i].position = np.random.uniform(varmin,varmax,nvar)
+        pop[i].cost=costfunc(pop[i].position)
+        if pop[i].cost < bestsol.cost:
+            bestsol = pop[i].deepcopy()
+        if pop[i].cost > worstsol.cost:
+            worstsol = pop[i].deepcopy()
+
+    # Best Cost of iterations
+    bestcost = np.empty(maxit)
+    
+    # Worst Cost of iterations
+    worstcost = np.empty(maxit)
+    
+    # Main Loop of GA
+    for it in range(maxit):
+        costs = np.array([ x.cost for x in pop])
+        avg_cost= np.mean(costs)
+        if avg_cost != 0:
+            costs = costs/avg_cost
+        probs = np.exp(-beta*costs)
         
+        
+        for _ in range(nc//2):
+            
+            # Parent Selection (Random)
+            q = np.random.permutation(npop)
+            p1 = pop[q[0]]
+            p2 = pop[q[1]]
+            
+            #Perform Roulette Wheel Selection
+            p1 = pop[roulette_wheel_selection(probs)]
+            p2 = pop[roulette_wheel_selection(probs)]
+            
+            # Perform Crossover
+            c1, c2=crossover(p1, p2, gamma)
+            
+            # Perform Mutation
+            c1=mutate(c1, mu, sigma)
+            c2=mutate(c2, mu, sigma)
+            
+            # Apply Bounds
+            apply_bounds(c1, varmin, varmax)
+            apply_bounds(c2, varmin, varmax)
+            
+            c1.cost = costfunc(c1.position)
+            c2.cost = costfunc(c2.position)
+
+            if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
+                if c1.cost > p1.cost:
+                    pop[q[0]] = c1
+                if c2.cost > p2.cost:
+                    pop[q[1]] = c2
+            else:
+                if c2.cost > p1.cost:
+                    pop[q[0]] = c2
+                if c1.cost > p2.cost:
+                    pop[q[1]] = c1
+
+            pop = sorted(pop, key=lambda x: x.cost)
+            #Evaluate First Offspring
+            if pop[0].cost < bestsol.cost:
+                bestsol = c1.deepcopy()
+            if pop[0].cost > worstsol.cost:
+                worstsol = c1.deepcopy()
+
+        #Store Best Cost
+        bestcost[it] = bestsol.cost
+        
+        #Store Worst Cost
+        worstcost[it] = worstsol.cost
+        
+        #Show Iteration Information
+        # print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
+            
+    #Output
+    out = structure()
+    out.pop=pop
+    out.bestsol = bestsol
+    out.bestcost = bestcost 
+    out.worstsol = worstsol
+    out.worstcost = worstcost
+    return out
+
 def crossover(p1, p2, gamma=0.1):
      c1 = p1.deepcopy()
      c2 = p1.deepcopy()
@@ -157,6 +277,6 @@ def roulette_wheel_selection(p):
     r=sum(p)*np.random.rand()
     ind = np.argwhere(r <= c)
     return ind[0][0]
-    
-    
-    
+        
+def d(p,c):
+    return abs(sum(p.position)-sum(c.position))
