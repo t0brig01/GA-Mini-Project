@@ -189,7 +189,6 @@ def runCrowding(problem, params):
         avg_cost= np.mean(costs)
         if avg_cost != 0:
             costs = costs/avg_cost
-        probs = np.exp(-beta*costs)
         
         
         for _ in range(nc//2):
@@ -198,11 +197,7 @@ def runCrowding(problem, params):
             q = np.random.permutation(npop)
             p1 = pop[q[0]]
             p2 = pop[q[1]]
-            
-            #Perform Roulette Wheel Selection
-            p1 = pop[roulette_wheel_selection(probs)]
-            p2 = pop[roulette_wheel_selection(probs)]
-            
+
             # Perform Crossover
             c1, c2=crossover(p1, p2, gamma)
             
@@ -217,23 +212,36 @@ def runCrowding(problem, params):
             c1.cost = costfunc(c1.position)
             c2.cost = costfunc(c2.position)
 
+            #Crowding stuff
             if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
                 if c1.cost > p1.cost:
-                    pop[q[0]] = c1.deepcopy()
+                    p1 = c1
                 if c2.cost > p2.cost:
-                    pop[q[1]] = c2.deepcopy()
+                    p2 = c2
             else:
                 if c2.cost > p1.cost:
-                    pop[q[0]] = c2.deepcopy()
+                    p1 = c2
                 if c1.cost > p2.cost:
-                    pop[q[1]] = c1.deepcopy()
+                    p2 = c1
 
-            pop = sorted(pop, key=lambda x: x.cost)
             #Evaluate First Offspring
-            if pop[0].cost < bestsol.cost:
-                bestsol = c1.deepcopy()
-            if pop[0].cost > worstsol.cost:
-                worstsol = c1.deepcopy()
+            if p1.cost < bestsol.cost:
+                bestsol = p1.deepcopy()
+            if p1.cost > worstsol.cost:
+                worstsol = p1.deepcopy()
+            
+            #Evaluate Second Offspring
+            if p2.cost < bestsol.cost:
+                bestsol = p2.deepcopy()
+            if p2.cost > worstsol.cost:
+                worstsol = p2.deepcopy()
+
+            pop[q[0]] = p1.deepcopy()
+            pop[q[1]] = p2.deepcopy()
+            
+        # Merge Sort and Select
+        pop = sorted(pop, key=lambda x: x.cost)
+        pop = pop[0:npop]
 
         #Store Best Cost
         bestcost[it] = bestsol.cost
@@ -242,7 +250,7 @@ def runCrowding(problem, params):
         worstcost[it] = worstsol.cost
         
         #Show Iteration Information
-        # print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
+        print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
             
     #Output
     out = structure()

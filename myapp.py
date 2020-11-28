@@ -23,9 +23,9 @@ problem= structure()
 ##definition of cost function
 problem.costfunc = sphere
 ##defenition of search space
-problem.nvar = 5
-problem.varmin = -10 #[-10, -10, -1, -5, 4]
-problem.varmax = 10 #[10, 10, 1, 5, 10]
+problem.nvar = 1
+problem.varmin = 0 #[-10, -10, -1, -5, 4]
+problem.varmax = 1 #[10, 10, 1, 5, 10]
 
 #GA Parameters
 params=structure()
@@ -46,7 +46,7 @@ max = []
 min = []
 avg = []
 
-while x < 10:
+while x < 1:
     #Run GA
     out = ga.runCrowding(problem, params)
     max.append(np.max(out.bestcost))
