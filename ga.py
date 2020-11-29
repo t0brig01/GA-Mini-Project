@@ -65,14 +65,13 @@ def run(problem, params, method = "classic"):
         if avg_cost != 0:
             costs = costs/avg_cost
         probs = np.exp(-beta*costs)
-        
+        #Niching methods
+        if method == "sharing":
+            sharing(pop,sigma,1)
+        if method == "crowding":
+            crowding(pop,npop,gamma,mu,sigma,varmin,varmax,costfunc)
         popc = []
         for _ in range(nc//2):
-            #Niching methods
-            if method == "sharing":
-                sharing(pop)
-            if method == "crowding":
-                crowding(pop,npop,gamma,mu,sigma,varmin,varmax,costfunc)
             
             # Parent Selection (Random)
             q = np.random.permutation(npop)
@@ -297,7 +296,6 @@ def sh(dist, sigmaShare,alpha):
         return 1 - np.power(dist/sigmaShare,alpha)
     else:
         return 0
-
 def crowding(pop,npop,gamma,mu,sigma,varmin,varmax,costfunc):
     q = np.random.permutation(npop)
     p1 = pop[q[0]]
@@ -332,5 +330,7 @@ def crowding(pop,npop,gamma,mu,sigma,varmin,varmax,costfunc):
             pop = removearray(pop,p2)
             pop.append(c1)
 
-def sharing(pop):
-    return
+def sharing(pop,sigmaShare,alpha):
+    for i in range(len(pop)):
+        for j in range(i+1,len(pop)):
+            pop[i].cost = pop[i].cost/sh(d(pop[i],pop[j]),sigmaShare,alpha)
