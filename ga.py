@@ -332,5 +332,9 @@ def crowding(pop,npop,gamma,mu,sigma,varmin,varmax,costfunc):
 
 def sharing(pop,sigmaShare,alpha):
     for i in range(len(pop)):
-        for j in range(i+1,len(pop)):
-            pop[i].cost = pop[i].cost/sh(d(pop[i],pop[j]),sigmaShare,alpha)
+        shSum = 0
+        for j in range(len(pop)):
+            if np.array_equal(pop[i].position,pop[j].position): continue
+            shSum += sh(d(pop[i],pop[j]),sigmaShare,alpha)
+        if shSum == 0: continue
+        pop[i].cost = pop[i].cost / shSum
