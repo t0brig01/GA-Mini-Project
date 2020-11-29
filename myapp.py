@@ -32,7 +32,7 @@ problem= structure()
 ##definition of cost function
 problem.costfunc = test
 ##defenition of search space
-problem.nvar = 1
+problem.nvar = 2
 problem.varmin = 0 #[-10, -10, -1, -5, 4]
 problem.varmax = 1 #[10, 10, 1, 5, 10]
 
