@@ -428,3 +428,9 @@ def removearray(L,arr):
     else:
         raise ValueError('array not found in list.')
     return L
+
+def sh(dist, sigmaShare,alpha):
+    if dist < sigmaShare:
+        return 1 - np.power(dist/sigmaShare,alpha)
+    else:
+        return 0
