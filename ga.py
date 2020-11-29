@@ -189,53 +189,54 @@ def runCrowding(problem, params):
         avg_cost= np.mean(costs)
         if avg_cost != 0:
             costs = costs/avg_cost
-        
-        # Parent Selection (Random)
-        q = np.random.permutation(npop)
-        p1 = pop[q[0]]
-        p2 = pop[q[1]]
+            
+        for _ in range(nc//2):
+            # Parent Selection (Random)
+            q = np.random.permutation(npop)
+            p1 = pop[q[0]]
+            p2 = pop[q[1]]
 
-        # Perform Crossover
-        c1, c2=crossover(p1, p2, gamma)
-        
-        # Perform Mutation
-        c1=mutate(c1, mu, sigma)
-        c2=mutate(c2, mu, sigma)
-        
-        # Apply Bounds
-        apply_bounds(c1, varmin, varmax)
-        apply_bounds(c2, varmin, varmax)
-        
-        c1.cost = costfunc(c1.position)
-        c2.cost = costfunc(c2.position)
+            # Perform Crossover
+            c1, c2=crossover(p1, p2, gamma)
+            
+            # Perform Mutation
+            c1=mutate(c1, mu, sigma)
+            c2=mutate(c2, mu, sigma)
+            
+            # Apply Bounds
+            apply_bounds(c1, varmin, varmax)
+            apply_bounds(c2, varmin, varmax)
+            
+            c1.cost = costfunc(c1.position)
+            c2.cost = costfunc(c2.position)
 
-        #Crowding stuff
-        if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
-            if c1.cost > p1.cost:
-                pop.append(c1)
-                pop.remove(p1)
-            if c2.cost > p2.cost:
-                pop.append(c2)
-                pop.remove(p2)
-        else:
-            if c2.cost > p1.cost:
-                pop.append(c2)
-                pop.remove(p1)
-            if c1.cost > p2.cost:
-                pop.remove(p2)
-                pop.append(c1)
+            #Crowding stuff
+            if (d(p1,c1) + d(p2,c2)) <= (d(p1,c2)+d(p2,c1)):
+                if c1.cost > p1.cost:
+                    pop.append(c1)
+                    pop.remove(p1)
+                if c2.cost > p2.cost:
+                    pop.append(c2)
+                    pop.remove(p2)
+            else:
+                if c2.cost > p1.cost:
+                    pop.append(c2)
+                    pop.remove(p1)
+                if c1.cost > p2.cost:
+                    pop.remove(p2)
+                    pop.append(c1)
 
-        #Evaluate First Offspring
-        if c1.cost < bestsol.cost:
-            bestsol = c1.deepcopy()
-        if c1.cost > worstsol.cost:
-            worstsol = c1.deepcopy()
-        
-        #Evaluate Second Offspring
-        if c2.cost < bestsol.cost:
-            bestsol = c2.deepcopy()
-        if c2.cost > worstsol.cost:
-            worstsol = c2.deepcopy()
+            #Evaluate First Offspring
+            if c1.cost < bestsol.cost:
+                bestsol = c1.deepcopy()
+            if c1.cost > worstsol.cost:
+                worstsol = c1.deepcopy()
+            
+            #Evaluate Second Offspring
+            if c2.cost < bestsol.cost:
+                bestsol = c2.deepcopy()
+            if c2.cost > worstsol.cost:
+                worstsol = c2.deepcopy()
             
         
         # Merge Sort and Select
@@ -248,7 +249,7 @@ def runCrowding(problem, params):
         worstcost[it] = worstsol.cost
         
         #Show Iteration Information
-        print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
+        # print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
             
     #Output
     out = structure()

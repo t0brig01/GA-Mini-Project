@@ -19,19 +19,18 @@ trial_count = 10
 benchmark = 1 #use 1 or 4
 
 #squere test function
-def sphere(x):
+def test(x):
     if benchmark == 4:
         return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6))    
     elif benchmark == 1:
         return sum(np.power(np.sin(5*np.pi*x),6))
-    # return sum(x**2)  #cost function
     else:
         return False
 
 # Problem Definition
 problem= structure()
 ##definition of cost function
-problem.costfunc = sphere
+problem.costfunc = test
 ##defenition of search space
 problem.nvar = 1
 problem.varmin = 0 #[-10, -10, -1, -5, 4]
