@@ -55,14 +55,35 @@ max = []
 min = []
 avg = []
 
+#Classic
 while x < trial_count:
     #Run GA
-    out = ga.run(problem, params,"sharing")
+    out = ga.run(problem, params)
     max.append(np.max(out.bestcost))
     min.append(np.min(out.worstcost))
     avg.append(sum(out.bestcost)/len(out.bestcost))
     print("Run " + str(x+1) + " done")
     x += 1
+
+# #Sharing
+# while x < trial_count:
+#     #Run GA
+#     out = ga.run(problem, params,"sharing")
+#     max.append(np.max(out.bestcost))
+#     min.append(np.min(out.worstcost))
+#     avg.append(sum(out.bestcost)/len(out.bestcost))
+#     print("Run " + str(x+1) + " done")
+#     x += 1
+
+# #Crowding
+# while x < trial_count:
+#     #Run GA
+#     out = ga.run(problem, params,"crowding")
+#     max.append(np.max(out.bestcost))
+#     min.append(np.min(out.worstcost))
+#     avg.append(sum(out.bestcost)/len(out.bestcost))
+#     print("Run " + str(x+1) + " done")
+#     x += 1
 
 print("Max: " + str(np.max(max)))
 print("Min: "+ str(np.min(avg)))
