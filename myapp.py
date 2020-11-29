@@ -57,7 +57,7 @@ avg = []
 
 while x < trial_count:
     #Run GA
-    out = ga.runCrowding(problem, params)
+    out = ga.run(problem, params,"crowding")
     max.append(np.max(out.bestcost))
     min.append(np.min(out.worstcost))
     avg.append(sum(out.bestcost)/len(out.bestcost))
