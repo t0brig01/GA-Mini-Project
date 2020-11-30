@@ -161,12 +161,7 @@ def roulette_wheel_selection(p):
     return ind[0][0]
         
 def d(p,c):
-    if len(p.position) == 1:
-        return abs(sum(p.position)-sum(c.position))
-    elif len(p.position) == 2:
-        return abs(np.sqrt(np.power((p.position[0]-c.position[0]),2)+np.power((p.position[1]-c.position[1]),2)))
-    else:
-        return False
+    return abs(sum(p.position)-sum(c.position))
 
 def removearray(L,arr):
     ind = 0

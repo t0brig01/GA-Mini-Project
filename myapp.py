@@ -13,7 +13,7 @@ import ga
 import csv
 
 #parameters
-pM = 0.01
+pM = 0.1
 pC = 0.1
 trial_count = 1
 benchmark = 4 #use 1 or 4
