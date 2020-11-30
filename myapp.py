@@ -16,12 +16,12 @@ import csv
 pM = 0.01
 pC = 0.1
 trial_count = 1
-benchmark = 1 #use 1 or 4
+benchmark = 4 #use 1 or 4
 
 #squere test function
 def test(x):
     if benchmark == 4:
-        return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6)) / len(x)   
+        return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6))/len(x)   
     elif benchmark == 1:
         return sum(np.power(np.sin(5*np.pi*x),6)) / len(x)
     else:
@@ -55,24 +55,24 @@ max = []
 min = []
 avg = []
 #Classic
-while x < trial_count:
-    #Run GA
-    out = ga.run(problem, params)
-    max.append(np.max(out.bestcost))
-    min.append(np.min(out.worstcost))
-    avg.append(sum(out.bestcost)/len(out.bestcost))
-    print("Run " + str(x+1) + " done")
-    x += 1
-
-# #Sharing
 # while x < trial_count:
 #     #Run GA
-#     out = ga.run(problem, params,"sharing")
+#     out = ga.run(problem, params)
 #     max.append(np.max(out.bestcost))
 #     min.append(np.min(out.worstcost))
 #     avg.append(sum(out.bestcost)/len(out.bestcost))
 #     print("Run " + str(x+1) + " done")
 #     x += 1
+
+#Sharing
+while x < trial_count:
+    #Run GA
+    out = ga.run(problem, params,"sharing")
+    max.append(np.max(out.bestcost))
+    min.append(np.min(out.worstcost))
+    avg.append(sum(out.bestcost)/len(out.bestcost))
+    print("Run " + str(x+1) + " done")
+    x += 1
 
 # #Crowding
 # while x < trial_count:

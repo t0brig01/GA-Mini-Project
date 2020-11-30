@@ -46,7 +46,6 @@ def run(problem, params, method = "classic"):
     pop = empty_individual.repeat(npop)
     for i in range (npop):
         pop[i].position = np.random.uniform(varmin,varmax,nvar)
-        print(pop[i].position)
         pop[i].cost=costfunc(pop[i].position)
         if pop[i].cost > bestsol.cost:
             bestsol = pop[i].deepcopy()
@@ -114,18 +113,17 @@ def run(problem, params, method = "classic"):
             
         # Merge Sort and Select
         pop += popc 
-        pop = sorted(pop, key=lambda x: x.cost)
+        pop = sorted(pop, key=lambda x: x.cost,reverse=True)
         pop = pop[0:npop]
         
         #Store Best Cost
         bestcost[it] = bestsol.cost
         
         #Store Worst Cost
-        worstcost[it] = worstsol.cost
+        worstcost[it] = pop[-1].cost
         
         #Show Iteration Information
         print("Iteration {}: Best Cost = {} / Worst Cost = {}".format(it, bestcost[it], worstcost[it]))
-        
     
             
     #Output
