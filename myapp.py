@@ -13,17 +13,17 @@ import ga
 import csv
 
 #parameters
-pM = 0.1
+pM = 0.01
 pC = 0.1
-trial_count = 10
+trial_count = 1
 benchmark = 1 #use 1 or 4
 
 #squere test function
 def test(x):
     if benchmark == 4:
-        return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6))    
+        return sum(np.power(np.e,-2*np.log(2)*np.power((x-0.08)/0.854,2))*np.power(np.sin(5*np.pi*((np.sign(x)*(np.abs(x))**.75)-.05)),6)) / len(x)   
     elif benchmark == 1:
-        return sum(np.power(np.sin(5*np.pi*x),6))
+        return sum(np.power(np.sin(5*np.pi*x),6)) / len(x)
     else:
         return False
 
@@ -33,8 +33,8 @@ problem= structure()
 problem.costfunc = test
 ##defenition of search space
 problem.nvar = 2
-problem.varmin = 0 #[-10, -10, -1, -5, 4]
-problem.varmax = 1 #[10, 10, 1, 5, 10]
+problem.varmin = 0 
+problem.varmax = 1 
 
 #GA Parameters
 params=structure()
@@ -54,26 +54,25 @@ x=0
 max = []
 min = []
 avg = []
-
-# #Classic
-# while x < trial_count:
-#     #Run GA
-#     out = ga.run(problem, params)
-#     max.append(np.max(out.bestcost))
-#     min.append(np.min(out.worstcost))
-#     avg.append(sum(out.bestcost)/len(out.bestcost))
-#     print("Run " + str(x+1) + " done")
-#     x += 1
-
-#Sharing
+#Classic
 while x < trial_count:
     #Run GA
-    out = ga.run(problem, params,"sharing")
+    out = ga.run(problem, params)
     max.append(np.max(out.bestcost))
     min.append(np.min(out.worstcost))
     avg.append(sum(out.bestcost)/len(out.bestcost))
     print("Run " + str(x+1) + " done")
     x += 1
+
+# #Sharing
+# while x < trial_count:
+#     #Run GA
+#     out = ga.run(problem, params,"sharing")
+#     max.append(np.max(out.bestcost))
+#     min.append(np.min(out.worstcost))
+#     avg.append(sum(out.bestcost)/len(out.bestcost))
+#     print("Run " + str(x+1) + " done")
+#     x += 1
 
 # #Crowding
 # while x < trial_count:
@@ -90,8 +89,8 @@ print("Min: "+ str(np.min(avg)))
 print("Average: "+ str(sum(avg)/10))
 #Results
 #plt.plot(out.bestcost)
-plt.semilogy(out.bestcost, label = "best")
-plt.plot(out.worstcost, label = "worst")
+plt.plot(out.bestcost, label = "best")
+# plt.plot(out.worstcost, label = "worst")
 plt.xlim(0,params.maxit)
 plt.xlabel("Iteration")
 plt.ylabel("Best Cost")

@@ -35,21 +35,22 @@ def run(problem, params, method = "classic"):
     
     # BestSolution Ever found
     bestsol = empty_individual.deepcopy()
-    bestsol.cost = np.inf
+    bestsol.cost = np.NINF
 
     # WorstSolution Ever found
     worstsol = empty_individual.deepcopy()
-    worstsol.cost = 0
+    worstsol.cost = np.inf
     
     
     # Initialiaze Population
     pop = empty_individual.repeat(npop)
     for i in range (npop):
         pop[i].position = np.random.uniform(varmin,varmax,nvar)
+        print(pop[i].position)
         pop[i].cost=costfunc(pop[i].position)
-        if pop[i].cost < bestsol.cost:
+        if pop[i].cost > bestsol.cost:
             bestsol = pop[i].deepcopy()
-        if pop[i].cost > worstsol.cost:
+        if pop[i].cost < worstsol.cost:
             worstsol = pop[i].deepcopy()
 
     # Best Cost of iterations
@@ -95,16 +96,16 @@ def run(problem, params, method = "classic"):
             
             #Evaluate First Offspring
             c1.cost = costfunc(c1.position)
-            if c1.cost < bestsol.cost:
+            if c1.cost > bestsol.cost:
                 bestsol = c1.deepcopy()
-            if c1.cost > worstsol.cost:
+            if c1.cost < worstsol.cost:
                 worstsol = c1.deepcopy()
             
             #Evaluate Second Offspring
             c2.cost = costfunc(c2.position)
-            if c2.cost < bestsol.cost:
+            if c2.cost > bestsol.cost:
                 bestsol = c2.deepcopy()
-            if c2.cost > worstsol.cost:
+            if c2.cost < worstsol.cost:
                 worstsol = c2.deepcopy()
 
             #Add Offsprings to popc
